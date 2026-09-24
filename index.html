@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>J&T Tracker — Cek Resi</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#070b12;color:#fff}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 15% 10%,#e51b2b33,transparent 30%),radial-gradient(circle at 85% 80%,#2563eb22,transparent 35%)}
+.nav{height:72px;border-bottom:1px solid #ffffff12;display:flex;align-items:center;justify-content:space-between;padding:0 7%;backdrop-filter:blur(14px);position:sticky;top:0;background:#070b12cc;z-index:5}
+.logo{font-weight:900;font-size:22px}.logo b{color:#e51b2b}.tag{font-size:12px;color:#9ca3af}
+.hero{max-width:920px;margin:80px auto 35px;padding:0 20px;text-align:center}.eyebrow{color:#ff6670;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+h1{font-size:clamp(42px,8vw,76px);line-height:1;letter-spacing:-4px;margin:16px 0}.grad{background:linear-gradient(100deg,#fff,#ff6972);-webkit-background-clip:text;color:transparent}
+.hero p{color:#9ca3af;line-height:1.7;max-width:620px;margin:auto}
+.search{max-width:760px;margin:34px auto 0;display:flex;gap:10px;background:#ffffff08;border:1px solid #ffffff15;border-radius:18px;padding:8px}
+input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#fff;padding:16px;font-size:15px}
+button{border:0;border-radius:13px;background:#e51b2b;color:#fff;padding:0 25px;font-weight:800;cursor:pointer}button:hover{filter:brightness(1.12)}
+button:disabled{opacity:.6;cursor:wait}
+.examples{font-size:12px;color:#667085;margin-top:12px}
+.container{max-width:920px;margin:40px auto 90px;padding:0 20px}.card{background:#ffffff07;border:1px solid #ffffff12;border-radius:22px;padding:25px;margin-top:18px}
+.hidden{display:none}.statusTop{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.status{display:inline-flex;padding:7px 11px;border-radius:99px;background:#e51b2b22;color:#ff8c94;font-size:12px;font-weight:800}
+.resi{font-size:13px;color:#8e99aa;margin-top:8px}.route{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:22px 0}.box{background:#00000020;border:1px solid #ffffff0b;border-radius:15px;padding:17px}.box small{color:#697386}.box strong{display:block;margin-top:7px}
+.timeline{margin-top:25px}.event{display:grid;grid-template-columns:25px 1fr;gap:13px;padding-bottom:24px}.dot{width:12px;height:12px;border-radius:50%;background:#e51b2b;margin-top:4px;box-shadow:0 0 0 5px #e51b2b18}.line{position:relative}.line:before{content:"";position:absolute;width:1px;background:#ffffff18;top:17px;bottom:-10px;left:6px}.event:last-child .line:before{display:none}.event h4{margin:0 0 5px;font-size:14px}.event p{margin:0;color:#8d97a8;font-size:13px;line-height:1.6}.time{font-size:11px;color:#667085;margin-top:5px}
+.loading{text-align:center;color:#9ca3af;padding:25px}.error{color:#ff8c94;background:#e51b2b12;border:1px solid #e51b2b25;padding:15px;border-radius:14px}
+footer{text-align:center;color:#566070;font-size:12px;padding:30px;border-top:1px solid #ffffff0b}
+@media(max-width:600px){.search{flex-direction:column;background:transparent;border:0;padding:0}.search input{background:#ffffff08;border:1px solid #ffffff15;border-radius:14px}.search button{height:52px}.route{grid-template-columns:1fr}.nav{padding:0 20px}.tag{display:none}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="logo">J&T <b>TRACKER</b></div><div class="tag">Real-time shipment lookup</div></nav>
+
+<section class="hero">
+<div class="eyebrow">Shipment Tracking</div>
+<h1>Lacak paket <span class="grad">J&T</span></h1>
+<p>Masukkan nomor resi untuk melihat status, lokasi terakhir, dan riwayat perjalanan paket.</p>
+<div class="search">
+<input id="resi" placeholder="Masukkan nomor resi..." autocomplete="off">
+<button id="btn" onclick="track()">Lacak Paket</button>
+</div>
+<div class="examples">Contoh: masukkan nomor resi J&T milikmu</div>
+</section>
+
+<main class="container">
+<div id="result" class="card hidden"></div>
+</main>
+
+<footer>© 2026 J&T Tracker • Data tracking disediakan oleh layanan API yang terhubung.</footer>
+
+<script>
+const result=document.getElementById('result'), btn=document.getElementById('btn'), input=document.getElementById('resi');
+
+input.addEventListener('keydown',e=>{if(e.key==='Enter')track()});
+
+async function track(){
+  const resi=input.value.trim();
+  if(!resi){showError('Masukkan nomor resi terlebih dahulu.');return}
+  btn.disabled=true; btn.textContent='Melacak...';
+  result.className='card'; result.innerHTML='<div class="loading">Mengambil data tracking...</div>';
+  try{
+    const r=await fetch('/api/track?resi='+encodeURIComponent(resi));
+    const data=await r.json();
+    if(!r.ok || !data.success) throw new Error(data.message||'Data tracking tidak ditemukan.');
+    render(data);
+  }catch(e){showError(e.message)}
+  finally{btn.disabled=false;btn.textContent='Lacak Paket'}
+}
+function showError(msg){result.className='card';result.innerHTML='<div class="error">'+escapeHtml(msg)+'</div>'}
+function render(d){
+  const events=d.events||[];
+  result.innerHTML=`
+  <div class="statusTop">
+    <div><span class="status">${escapeHtml(d.status||'Unknown')}</span><div class="resi">${escapeHtml(d.resi)}</div></div>
+    <div class="resi">${escapeHtml(d.updated_at||'')}</div>
+  </div>
+  <div class="route">
+    <div class="box"><small>Asal</small><strong>${escapeHtml(d.origin||'-')}</strong></div>
+    <div class="box"><small>Tujuan</small><strong>${escapeHtml(d.destination||'-')}</strong></div>
+  </div>
+  <div class="timeline">${events.map((e,i)=>`
+    <div class="event"><div class="line"><div class="dot"></div></div>
+    <div><h4>${escapeHtml(e.status||'Update')}</h4><p>${escapeHtml(e.location||'')}</p><div class="time">${escapeHtml(e.time||'')}</div></div></div>`).join('')}</div>`;
+}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+</script>
+</body>
+</html>
