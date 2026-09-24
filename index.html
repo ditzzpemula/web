@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roblox Profile</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+font-family:Arial,sans-serif;
+min-height:100vh;
+color:#fff;
+background:
+radial-gradient(circle at 20% 10%,#1855a955,transparent 35%),
+radial-gradient(circle at 80% 90%,#6135b844,transparent 35%),
+#05070d;
+}
+
+.container{
+width:min(900px,92%);
+margin:auto;
+padding:35px 0;
+}
+
+header{text-align:center;margin-bottom:25px}
+
+.logo{
+display:inline-block;
+padding:8px 15px;
+border:1px solid #ffffff18;
+border-radius:30px;
+background:#ffffff08;
+color:#6daaff;
+font-size:13px;
+}
+
+h1{
+font-size:clamp(35px,8vw,60px);
+margin-top:15px;
+}
+
+.subtitle{
+color:#8490a6;
+margin-top:8px;
+}
+
+.search{
+display:flex;
+gap:10px;
+margin:25px auto;
+max-width:650px;
+}
+
+input{
+flex:1;
+padding:16px;
+border-radius:15px;
+border:1px solid #ffffff15;
+outline:none;
+background:#ffffff09;
+color:#fff;
+font-size:15px;
+}
+
+button{
+padding:0 25px;
+border:0;
+border-radius:15px;
+background:linear-gradient(135deg,#287cff,#704cff);
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.card{
+padding:30px;
+border-radius:28px;
+border:1px solid #ffffff12;
+background:#0b101bcc;
+backdrop-filter:blur(20px);
+box-shadow:0 25px 80px #0008;
+}
+
+.profile{
+display:flex;
+gap:25px;
+align-items:center;
+}
+
+.avatar{
+width:145px;
+height:145px;
+border-radius:25px;
+object-fit:cover;
+background:#111827;
+border:3px solid #438cff;
+}
+
+.name{
+font-size:32px;
+font-weight:bold;
+word-break:break-word;
+}
+
+.username{
+color:#7f8ba0;
+margin-top:5px;
+}
+
+.status{
+display:inline-flex;
+align-items:center;
+gap:7px;
+margin-top:15px;
+padding:7px 12px;
+border-radius:20px;
+background:#42dc9115;
+color:#59dfa0;
+font-size:12px;
+}
+
+.dot{
+width:7px;
+height:7px;
+border-radius:50%;
+background:#43df91;
+}
+
+.bio{
+margin-top:25px;
+padding:18px;
+border-radius:17px;
+background:#ffffff06;
+border:1px solid #ffffff0b;
+line-height:1.6;
+color:#d9dfeb;
+}
+
+.bio-title{
+font-size:11px;
+color:#6f7c91;
+text-transform:uppercase;
+margin-bottom:7px;
+letter-spacing:1.5px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+margin-top:15px;
+}
+
+.stat{
+padding:18px;
+text-align:center;
+border-radius:17px;
+background:#ffffff06;
+border:1px solid #ffffff0b;
+}
+
+.number{
+font-size:23px;
+font-weight:bold;
+}
+
+.label{
+color:#707c91;
+font-size:12px;
+margin-top:5px;
+}
+
+.actions{
+display:flex;
+gap:10px;
+margin-top:18px;
+}
+
+.action{
+flex:1;
+padding:14px;
+text-align:center;
+border-radius:14px;
+text-decoration:none;
+color:#fff;
+background:#ffffff08;
+border:1px solid #ffffff10;
+}
+
+.primary{
+background:linear-gradient(135deg,#287cff,#704cff);
+border:0;
+}
+
+#loading{
+text-align:center;
+padding:50px;
+color:#8590a4;
+}
+
+.spinner{
+width:38px;
+height:38px;
+margin:auto auto 15px;
+border:3px solid #ffffff12;
+border-top-color:#4d9cff;
+border-radius:50%;
+animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg)}
+}
+
+#error{
+display:none;
+padding:18px;
+border-radius:15px;
+background:#ff454510;
+border:1px solid #ff454525;
+color:#ff9c9c;
+}
+
+#content{display:none}
+
+footer{
+text-align:center;
+color:#4e596c;
+font-size:12px;
+margin-top:20px;
+}
+
+@media(max-width:600px){
+.search{flex-direction:column}
+button{height:50px}
+.profile{flex-direction:column;text-align:center}
+.avatar{width:130px;height:130px}
+.name{font-size:27px}
+.stats{grid-template-columns:1fr}
+.actions{flex-direction:column}
+.card{padding:20px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<div class="logo">ROBLOX PROFILE VIEWER</div>
+<h1>Roblox Profile</h1>
+<p class="subtitle">Cari profil Roblox berdasarkan username.</p>
+</header>
+
+<div class="search">
+<input id="username" value="ditzztzy22"
+placeholder="Username Roblox...">
+<button onclick="search()">Cari</button>
+</div>
+
+<div class="card">
+
+<div id="loading">
+<div class="spinner"></div>
+Memuat profil...
+</div>
+
+<div id="error"></div>
+
+<div id="content">
+
+<div class="profile">
+
+<img id="avatar" class="avatar">
+
+<div>
+<div id="displayName" class="name">-</div>
+<div id="userName" class="username">@-</div>
+
+<div class="status">
+<span class="dot"></span>
+<span id="status">-</span>
+</div>
+</div>
+
+</div>
+
+<div class="bio">
+<div class="bio-title">About</div>
+<div id="description">Tidak ada bio.</div>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<div id="friends" class="number">-</div>
+<div class="label">Friends</div>
+</div>
+
+<div class="stat">
+<div id="followers" class="number">-</div>
+<div class="label">Followers</div>
+</div>
+
+<div class="stat">
+<div id="following" class="number">-</div>
+<div class="label">Following</div>
+</div>
+
+</div>
+
+<div class="actions">
+
+<a id="profile" class="action primary"
+target="_blank">
+Buka Profil Roblox
+</a>
+
+<a id="avatarLink" class="action"
+target="_blank">
+Lihat Avatar
+</a>
+
+</div>
+
+</div>
+</div>
+
+<footer>
+Roblox Profile Viewer
+</footer>
+
+</div>
+
+<script>
+async function search(){
+
+const username=
+document.getElementById("username").value.trim();
+
+if(!username)return;
+
+const loading=document.getElementById("loading");
+const content=document.getElementById("content");
+const error=document.getElementById("error");
+
+loading.style.display="block";
+content.style.display="none";
+error.style.display="none";
+
+try{
+
+const response=await fetch(
+"/api/roblox?username="+
+encodeURIComponent(username)
+);
+
+const data=await response.json();
+
+if(!response.ok){
+throw new Error(data.error||"Profil tidak ditemukan");
+}
+
+document.getElementById("avatar").src=data.avatar;
+
+document.getElementById("displayName").textContent=
+data.displayName;
+
+document.getElementById("userName").textContent=
+"@"+data.username;
+
+document.getElementById("description").textContent=
+data.description||"Tidak ada bio.";
+
+document.getElementById("friends").textContent=
+format(data.friends);
+
+document.getElementById("followers").textContent=
+format(data.followers);
+
+document.getElementById("following").textContent=
+format(data.following);
+
+document.getElementById("status").textContent=
+data.status;
+
+document.getElementById("profile").href=
+"https://www.roblox.com/users/"+data.id+"/profile";
+
+document.getElementById("avatarLink").href=
+"https://www.roblox.com/users/"+data.id+"/avatar";
+
+document.title=
+data.displayName+" — Roblox Profile";
+
+loading.style.display="none";
+content.style.display="block";
+
+}catch(e){
+
+loading.style.display="none";
+error.textContent=e.message;
+error.style.display="block";
+
+}
+
+}
+
+function format(n){
+
+n=Number(n||0);
+
+if(n>=1000000)
+return (n/1000000).toFixed(1)+"M";
+
+if(n>=1000)
+return (n/1000).toFixed(1)+"K";
+
+return n.toLocaleString("id-ID");
+}
+
+document
+.getElementById("username")
+.addEventListener("keydown",e=>{
+if(e.key==="Enter")search();
+});
+
+search();
+</script>
+
+</body>
+</html>
