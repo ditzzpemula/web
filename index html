@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeeStore - Jasa Dev Profesional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            /* Efek Manga Halftone (Titik-titik) */
+            background-image: radial-gradient(var(--text-color) 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+
+        /* Overlay putih agar halftone tidak terlalu mencolok */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.94);
+            z-index: -1;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--text-color);
+            color: var(--bg-color);
+            border-bottom: 5px solid var(--text-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efek Speed Lines khas Manga di Header */
+        header::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: repeating-conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 8deg,
+                rgba(255, 255, 255, 0.07) 8deg,
+                rgba(255, 255, 255, 0.07) 10deg
+            );
+            transform: translate(-50%, -50%);
+            animation: spin 40s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .logo {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5em;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 2.2em;
+            margin: 10px 0;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header p {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1em;
+            font-style: italic;
+            opacity: 0.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            font-family: 'Bangers', cursive;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            border-bottom: 4px solid var(--text-color);
+            display: inline-block;
+            padding-bottom: 5px;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            letter-spacing: 1px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 4px solid var(--text-color);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 8px 8px 0px var(--text-color);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--text-color);
+        }
+
+        /* Dekorasi sudut panel manga */
+        .card::after {
+            content: "";
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 30px;
+            height: 30px;
+            background-image: radial-gradient(var(--text-color) 30%, transparent 30%);
+            background-size: 4px 4px;
+            opacity: 0.2;
+        }
+
+        .card h3 {
+            font-family: 'Bangers', cursive;
+            font-size: 1.8em;
+            margin-top: 0;
+            border-bottom: 2px dashed var(--text-color);
+            padding-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .card li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #ccc;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .card li:last-child {
+            border-bottom: none;
+        }
+
+        .price {
+            font-family: 'Roboto Mono', monospace;
+            background: var(--text-color);
+            color: var(--bg-color);
+            padding: 6px 14px;
+            font-weight: 900;
+            font-size: 1em;
+            border: 2px solid var(--text-color);
+            white-space: nowrap;
+        }
+
+        .card.highlight {
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        .card.highlight h3 {
+            border-bottom-color: var(--bg-color);
+        }
+
+        .card.highlight .price {
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .card.highlight small {
+            display: block;
+            margin-top: 10px;
+            opacity: 0.8;
+            font-style: italic;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.85em;
+        }
+
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .pay-card {
+            background: var(--bg-color);
+            border: 4px solid var(--text-color);
+            padding: 15px 30px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5em;
+            box-shadow: 5px 5px 0px var(--text-color);
+            letter-spacing: 1px;
+        }
+
+        .contact {
+            text-align: center;
+            background: var(--text-color);
+            color: var(--bg-color);
+            padding: 40px 20px;
+            border: 4px solid var(--text-color);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
+        }
+
+        .contact h2 {
+            color: var(--bg-color);
+            border-bottom-color: var(--bg-color);
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Bangers', cursive;
+            font-size: 1.8em;
+            padding: 15px 40px;
+            text-decoration: none;
+            border: 4px solid var(--bg-color);
+            box-shadow: 6px 6px 0px rgba(255,255,255,0.3);
+            transition: all 0.2s;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--text-color);
+            color: var(--bg-color);
+            border-color: var(--bg-color);
+            box-shadow: 6px 6px 0px var(--bg-color);
+            transform: translate(-3px, -3px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.85em;
+            border-top: 4px solid var(--text-color);
+            background: var(--bg-color);
+            font-weight: bold;
+        }
+
+        /* Responsif untuk HP */
+        @media (max-width: 600px) {
+            .logo { font-size: 2.5em; }
+            header h1 { font-size: 1.6em; }
+            .card li { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .price { align-self: flex-end; }
+            .payment-methods { flex-direction: column; align-items: center; }
+            .btn { font-size: 1.4em; padding: 12px 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">☠️ GEESTORE ☠️</div>
+        <h1>Jasa Development Game Profesional</h1>
+        <p>"Menuju Puncak Kualitas, Seperti Raja Bajak Laut!"</p>
+    </header>
+
+    <main>
+        <section class="services">
+            <h2>🏴‍☠️ Daftar Jasa & Harga</h2>
+            
+            <div class="card">
+                <h3>Rename GameMode (GM)</h3>
+                <ul>
+                    <li>Inferno <span class="price">Rp1.000</span></li>
+                    <li>LRP (Life Role Play) <span class="price">Rp3.000</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Modifikasi Fitur</h3>
+                <p style="margin-top: 0; font-weight: bold;">Add / Remove Fitur, Mapping, dan Textdraw (TD)</p>
+                <div style="margin-top: 15px;">
+                    <span class="price">Rp5.000 - Rp15.000</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Paket Dev Langganan</h3>
+                <ul>
+                    <li>Paket Mingguan <span class="price">Rp35.000</span></li>
+                    <li>Paket Bulanan <span class="price">Rp140.000</span></li>
+                </ul>
+            </div>
+
+            <div class="card highlight">
+                <h3>🎨 Create Textdraw (TD)</h3>
+                <p style="margin-top: 0; font-weight: bold;">Custom Textdraw Profesional sesuai keinginanmu!</p>
+                <span class="price">Rp3.000 - Rp50.000+</span>
+                <small>*Harga tergantung tingkat kesulitan & detail</small>
+            </div>
+        </section>
+
+        <section class="payment">
+            <h2>💳 Metode Pembayaran</h2>
+            <div class="payment-methods">
+                <div class="pay-card">DANA ✓</div>
+                <div class="pay-card">QRIS ✓</div>
+            </div>
+        </section>
+
+        <section class="contact">
+            <h2>📞 Hubungi Admin</h2>
+            <p style="font-size: 1.1em; margin-bottom: 5px;">Tertarik? Jangan ragu untuk <strong>PM Admin</strong> sekarang juga!</p>
+            <p style="font-family: 'Roboto Mono', monospace; font-size: 0.9em; opacity: 0.8;">(Ganti link di bawah ini dengan link WA Admin Anda)</p>
+            
+            <!-- GANTI href DI BAWAH INI DENGAN LINK WA ADMIN ANDA, contoh: https://wa.me/628123456789 -->
+            <a href="https://wa.me/628123456789" target="_blank" class="btn">PM ADMIN SEKARANG</a>
+            <br><br>
+            <a href="https://whatsapp.com/channel/0029VbDiMcSKQuJG1W5TIj2I" target="_blank" style="color: #fff; font-family: 'Bangers', cursive; font-size: 1.3em; text-decoration: underline; letter-spacing: 1px;">ATAU JOIN CHANNEL WHATSAPP KAMI</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 GeeStore. All Rights Reserved.</p>
+        <p>"Aku akan menjadi Raja Developer!" ☠️</p>
+    </footer>
+
+</body>
+</html>
